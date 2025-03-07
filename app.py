@@ -25,7 +25,7 @@ except Exception as e:
 st.markdown("""
     <h1 style="text-align: center; color: #4CAF50;">Bu layihə <span style="color: red;">Fətulla Əliyev</span> tərəfindən <span style="color: red;">AILAB Levenshtein_x</span> tapşırığı üçün hazırlanmışdır</h1>
     <h2 style="text-align: center; color: #4CAF50;">Levenshtein məsafəsi istifadə olunaraq düzgün atalar sözünün tapılması</h2>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # Lottie animasiyasını yükləyirik
 lottie_url = "https://assets1.lottiefiles.com/packages/lf20_qnkjwou9.json"  # Lottie animasiya URL-si
@@ -38,7 +38,7 @@ if lottie_animation:
 st.markdown("""
     <h3 style="text-align: center; color: #2E8B57;">Axtarış Edin:</h3>
     <p style="text-align: center; color: #555555;">Verilənlər bazasında axtarış edərək ən yaxın atalar sözünü tapın</p>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # Axtarış pəncərəsini böyüdürük
 user_input = st.text_input("Atalar sözünüzü daxil edin:", "", max_chars=100)
@@ -60,9 +60,6 @@ def find_closest_proverb(user_input, first_column):
 # Əgər istifadəçi daxil edibsə
 if user_input:
     closest_proverb, distance = find_closest_proverb(user_input, first_column)
-
-    # HTML etiketlərini təmizləyirik
-    closest_proverb = clean_html(closest_proverb)
 
     # Nəticəni göstəririk
     if closest_proverb:

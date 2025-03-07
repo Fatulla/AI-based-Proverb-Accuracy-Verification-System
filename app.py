@@ -12,9 +12,8 @@ def load_lottie_url(url: str):
         return None
     return r.json()
 
-url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.xlsx"
 # CSV faylının URL-i
-url = "https://raw.githubusercontent.com/İstifadəçiAdı/AILAB_TASK02_Atalar_Sözləri/main/atalar_sözləri.csv"
+url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.csv"
 
 # URL-dən CSV faylını oxumaq
 df = pd.read_csv(url)

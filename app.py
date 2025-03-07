@@ -14,7 +14,20 @@ def load_lottie_url(url: str):
 
 # CSV faylının URL-i
 url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.csv"
-df = pd.read_csv(url)
+
+# Faylı yükləyirik
+response = requests.get(url)
+
+# Faylı oxumağa çalışırıq
+if response.status_code == 200:
+    try:
+        df = pd.read_csv(BytesIO(response.content), delimiter=',', encoding='utf-8')
+        st.write(df.head())
+    except Exception as e:
+        st.error(f"Fayl oxunarkən xəta baş verdi: {e}")
+else:
+    st.error("Fayl yüklənərkən problem yarandı.")
+
 # Başlıq hissəsini düzəldirik
 st.markdown("""
     <h1 style="text-align: center; color: #4CAF50;">Bu layihə <span style="color: red;">Fətulla Əliyev</span> tərəfindən <span style="color: red;">AILAB Levenshtein_x</span> tapşırığı üçün hazırlanmışdır</h1>

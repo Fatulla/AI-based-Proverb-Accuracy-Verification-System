@@ -15,9 +15,8 @@ def load_lottie_url(url: str):
 # CSV faylının URL-i
 url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.csv"
 
-# skip_bad_lines istifadə edirik
 try:
-    df = pd.read_csv(url, delimiter=',', encoding='utf-8', skip_bad_lines=True)
+    df = pd.read_csv(url, delimiter=',', encoding='utf-8', on_bad_lines='skip')
     st.write(df.head())  # DataFrame-in başını göstəririk
 except Exception as e:
     st.error(f"Fayl oxunarkən xəta baş verdi: {e}")

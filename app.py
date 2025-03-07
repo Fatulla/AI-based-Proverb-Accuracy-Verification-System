@@ -59,7 +59,10 @@ def find_closest_proverb(user_input, first_column):
 
 # Əgər istifadəçi daxil edibsə
 if user_input:
-    closest_proverb, distance = find_closest_proverb(user_input, df)
+    closest_proverb, distance = find_closest_proverb(user_input, first_column)
+
+    # HTML etiketlərini təmizləyirik
+    closest_proverb = clean_html(closest_proverb)
 
     # Nəticəni göstəririk
     if closest_proverb:
@@ -75,4 +78,4 @@ st.markdown("""
     <p>Əlaqə üçün: <a href="mailto:aliyevfatulla99@gmail.com">aliyevfatulla99@gmail.com</a></p>
     <p>Telefon: 050-778-08-18</p>
     </div>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)

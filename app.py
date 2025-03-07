@@ -13,15 +13,11 @@ def load_lottie_url(url: str):
     return r.json()
 
 url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.xlsx"
-# URL-dən faylı yükləyirik
-response = requests.get(url)
-if response.status_code == 200:
-    # BytesIO ilə faylı oxuyuruq
-    df = pd.read_excel(BytesIO(response.content))
-    st.write(df.head())  # Başlığı göstəririk
-else:
-    st.error("Fayl yüklənərkən problem yarandı.")
+# CSV faylının URL-i
+url = "https://raw.githubusercontent.com/İstifadəçiAdı/AILAB_TASK02_Atalar_Sözləri/main/atalar_sözləri.csv"
 
+# URL-dən CSV faylını oxumaq
+df = pd.read_csv(url)
 # Başlıq hissəsini düzəldirik
 st.markdown("""
     <h1 style="text-align: center; color: #4CAF50;">Bu layihə <span style="color: red;">Fətulla Əliyev</span> tərəfindən <span style="color: red;">AILAB Levenshtein_x</span> tapşırığı üçün hazırlanmışdır</h1>

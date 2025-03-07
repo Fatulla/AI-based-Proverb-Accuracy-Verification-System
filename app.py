@@ -11,7 +11,7 @@ def load_lottie_url(url: str):
         return None
     return r.json()
 
-url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/raw/main/atalar_sözleri.xlsx"
+url = "https://raw.githubusercontent.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/main/atalar_sözleri.xlsx"
 df = pd.read_excel(url)
 
 # Başlıq hissəsini düzəldirik

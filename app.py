@@ -13,10 +13,10 @@ def load_lottie_url(url: str):
     return r.json()
 
 # CSV faylının URL-i
-url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/asa.csv"
+url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri_with_random.csv"
 
 # URL-dən CSV faylını oxumaq
-df = pd.read_csv(url)
+df = pd.read_csv(url, sep='|', encoding='utf-8-sig')
 
 # Başlıq hissəsini düzəldirik
 st.markdown("""

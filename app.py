@@ -13,19 +13,16 @@ def load_lottie_url(url: str):
     return r.json()
 
 # CSV faylının URL-i
-url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.csv"
+url = "https://raw.githubusercontent.com/İstifadəçiAdı/AILAB_TASK02_Atalar_Sözləri/main/atalar_sözləri.csv"
 
-try:
-    df = pd.read_csv(url, delimiter=',', encoding='utf-8', on_bad_lines='skip')
-    st.write(df.head())  # DataFrame-in başını göstəririk
-except Exception as e:
-    st.error(f"Fayl oxunarkən xəta baş verdi: {e}")
+# URL-dən CSV faylını oxumaq
+df = pd.read_csv(url)
 
 # Başlıq hissəsini düzəldirik
 st.markdown("""
     <h1 style="text-align: center; color: #4CAF50;">Bu layihə <span style="color: red;">Fətulla Əliyev</span> tərəfindən <span style="color: red;">AILAB Levenshtein_x</span> tapşırığı üçün hazırlanmışdır</h1>
     <h2 style="text-align: center; color: #4CAF50;">Levenshtein məsafəsi istifadə olunaraq düzgün atalar sözünün tapılması</h2>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 # Lottie animasiyasını yükləyirik
 lottie_url = "https://assets1.lottiefiles.com/packages/lf20_qnkjwou9.json"  # Lottie animasiya URL-si
@@ -38,17 +35,17 @@ if lottie_animation:
 st.markdown("""
     <h3 style="text-align: center; color: #2E8B57;">Axtarış Edin:</h3>
     <p style="text-align: center; color: #555555;">Verilənlər bazasında axtarış edərək ən yaxın atalar sözünü tapın</p>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 # Axtarış pəncərəsini böyüdürük
 user_input = st.text_input("Atalar sözünüzü daxil edin:", "", max_chars=100)
 
 # Nəticə bölməsi
-def find_closest_proverb(user_input, first_column):
+def find_closest_proverb(user_input, df):
     closest_proverb = None
     min_distance = float('inf')
 
-    for proverb in first_column:  # Burada birinci sütunu istifadə edirik
+    for proverb in df['Atalar_sozlari']:
         distance = Levenshtein.distance(user_input, proverb)
 
         if distance < min_distance:
@@ -59,7 +56,7 @@ def find_closest_proverb(user_input, first_column):
 
 # Əgər istifadəçi daxil edibsə
 if user_input:
-    closest_proverb, distance = find_closest_proverb(user_input, first_column)
+    closest_proverb, distance = find_closest_proverb(user_input, df)
 
     # Nəticəni göstəririk
     if closest_proverb:
@@ -75,4 +72,4 @@ st.markdown("""
     <p>Əlaqə üçün: <a href="mailto:aliyevfatulla99@gmail.com">aliyevfatulla99@gmail.com</a></p>
     <p>Telefon: 050-778-08-18</p>
     </div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)

@@ -2,3 +2,5 @@ Levenshtein
 pandas
 streamlit
 streamlit-lottie
+openpyxl
+requests

@@ -12,7 +12,7 @@ def load_lottie_url(url: str):
     return r.json()
 
 # Excel faylını oxuyuruq
-df = pd.read_excel("C:/Users/ASUS/Desktop/atalar_sözleri.xlsx")
+df = pd.read_excel(atalar_sözleri.xlsx)
 
 # Başlıq hissəsini düzəldirik
 st.markdown("""

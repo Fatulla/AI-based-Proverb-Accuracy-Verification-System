@@ -44,11 +44,11 @@ st.markdown("""
 user_input = st.text_input("Atalar sözünüzü daxil edin:", "", max_chars=100)
 
 # Nəticə bölməsi
-def find_closest_proverb(user_input, df):
+def find_closest_proverb(user_input, first_column):
     closest_proverb = None
     min_distance = float('inf')
 
-    for proverb in df['Atalar_sozlari']:
+    for proverb in first_column:  # Burada birinci sütunu istifadə edirik
         distance = Levenshtein.distance(user_input, proverb)
 
         if distance < min_distance:

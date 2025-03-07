@@ -15,18 +15,12 @@ def load_lottie_url(url: str):
 # CSV faylının URL-i
 url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.csv"
 
-# Faylı yükləyirik
-response = requests.get(url)
-
-# Faylı oxumağa çalışırıq
-if response.status_code == 200:
-    try:
-        df = pd.read_csv(BytesIO(response.content), delimiter=',', encoding='utf-8')
-        st.write(df.head())
-    except Exception as e:
-        st.error(f"Fayl oxunarkən xəta baş verdi: {e}")
-else:
-    st.error("Fayl yüklənərkən problem yarandı.")
+# skip_bad_lines istifadə edirik
+try:
+    df = pd.read_csv(url, delimiter=',', encoding='utf-8', skip_bad_lines=True)
+    st.write(df.head())  # DataFrame-in başını göstəririk
+except Exception as e:
+    st.error(f"Fayl oxunarkən xəta baş verdi: {e}")
 
 # Başlıq hissəsini düzəldirik
 st.markdown("""

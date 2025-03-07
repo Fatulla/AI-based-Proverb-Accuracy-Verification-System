@@ -3,6 +3,7 @@ import pandas as pd
 import Levenshtein
 from streamlit_lottie import st_lottie
 import requests
+from io import BytesIO
 
 # Lottie animasiyasını yükləmək üçün funksiyanı yaradın
 def load_lottie_url(url: str):
@@ -11,8 +12,15 @@ def load_lottie_url(url: str):
         return None
     return r.json()
 
-url = "https://raw.github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.xlsx"
-df = pd.read_excel(url)
+url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/blob/main/atalar_sozleri.xlsx"
+# URL-dən faylı yükləyirik
+response = requests.get(url)
+if response.status_code == 200:
+    # BytesIO ilə faylı oxuyuruq
+    df = pd.read_excel(BytesIO(response.content))
+    st.write(df.head())  # Başlığı göstəririk
+else:
+    st.error("Fayl yüklənərkən problem yarandı.")
 
 # Başlıq hissəsini düzəldirik
 st.markdown("""

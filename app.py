@@ -38,30 +38,9 @@ with st.expander("Sistem Haqqında", expanded=False):
         <strong>Levenshtein məsafəsi</strong> alqoritminə əsasən ən yaxın düzgün variantı tapır.</p>
         <p><strong>Necə işləyir?</strong> Siz atalar sözünü yazırsınız, sistem isə onu 
         verilənlər bazasındakı düzgün variantlarla müqayisə edir və ən az fərqli olanı göstərir.</p>
-        <p - Siz atalar sözünü yazarkən sistem real vaxt rejimində nəticələri göstərir.</p>
+        <p><strong>İstifadəsi:</strong> İlk hərfdən etibarən nəticələr real vaxtda görünür.</p>
     </div>
     """, unsafe_allow_html=True)
-
-# Verilənlər bazasını yükləmək
-st.markdown("""
-    <h3 style="text-align: center; color: #2E7D32;">Verilənlər Bazası</h3>
-    """, unsafe_allow_html=True)
-
-# Verilənlər bazasını yükləmək üçün düymə
-try:
-    response = requests.get(default_url)
-    if response.status_code == 200:
-        csv_data = BytesIO(response.content)
-        st.download_button(
-            label="Verilənlər bazasını yüklə",
-            data=csv_data,
-            file_name="atalar_sozleri_corrected.csv",
-            mime="text/csv"
-        )
-    else:
-        st.error("Verilənlər bazasını yükləmək mümkün olmadı.")
-except Exception as e:
-    st.error(f"Xəta: {e}")
 
 # Verilənlər bazasını oxumaq
 try:
@@ -80,7 +59,7 @@ if 'user_input' not in st.session_state:
     st.session_state.user_input = ""
 
 # Axtarış pəncərəsi
-user_input = st.text_input(
+st.text_input(
     "",
     placeholder="Atalar sözünü bura yazın...",
     max_chars=100,
@@ -128,3 +107,14 @@ st.markdown("""
         <p style="color: #555555;">📞 050-778-08-18</p>
     </div>
     """, unsafe_allow_html=True)
+
+# Verilənlər bazasını endirmək üçün düymə
+response = requests.get(default_url)
+if response.status_code == 200:
+    csv_data = BytesIO(response.content)
+    st.download_button(
+        label="Verilənlər bazasını endir",
+        data=csv_data,
+        file_name="atalar_sozleri_corrected.csv",
+        mime="text/csv"
+    )

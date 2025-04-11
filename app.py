@@ -13,15 +13,14 @@ def load_lottie_url(url: str):
     return r.json()
 
 # CSV faylının URL-i
-url = "https://github.com/Fatulla/AILAB_TASK02_Atalar_Sozlari/raw/main/atalar_sozleri_corrected.csv"
+url = "https://github.com/Fatulla/AI-based-Proverb-Accuracy-Verification-System/raw/main/atalar_sozleri_corrected.csv"
 
 # URL-dən CSV faylını oxumaq
 df = pd.read_csv(url, sep='|', encoding='utf-8-sig')
 
-# Başlıq hissəsini düzəldirik
 st.markdown("""
-    <h1 style="text-align: center; color: #4CAF50;">Bu layihə <span style="color: red;">Fətulla Əliyev</span> tərəfindən <span style="color: red;">AILAB Levenshtein_x</span> tapşırığı üçün hazırlanmışdır</h1>
-    <h2 style="text-align: center; color: #4CAF50;">Levenshtein məsafəsi istifadə olunaraq düzgün atalar sözünün tapılması</h2>
+    <h1 style="text-align: center; color: #4CAF50;">Bu sistem, string similarity metrikalarından biri olan Levenshtein məsafəsinə əsaslanaraq yazdığınız atalar sözünün düzgün variantını sizə qaytarır</h1>
+    <h2 style="text-align: center; color: #4CAF50;">Levenshtein məsafəsinə əsaslanaraq yazdığınız atalar sözünün düzgün variantını qaytaran sistem</h2>
     """, unsafe_allow_html=True)
 
 # Lottie animasiyasını yükləyirik

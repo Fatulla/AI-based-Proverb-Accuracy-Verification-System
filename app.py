@@ -36,9 +36,9 @@ with st.expander("Sistem Haqqında", expanded=False):
     <div style="color: #1E88E5; font-size: 16px;">
         <p>Bu sistem, daxil etdiyiniz atalar sözünü verilənlər bazası ilə müqayisə edərək 
         <strong>Levenshtein məsafəsi</strong> alqoritminə əsasən ən yaxın düzgün variantı tapır.</p>
-        <p><strong>Necə işləyir?</strong> Siz atalar sözünü yazırsınız, sistem isə onu 
-        verilənlər bazasındakı düzgün variantlarla müqayisə edir və ən az fərqli olanı göstərir.</p>
-        <p><strong>İstifadəsi:</strong> İlk hərfdən etibarən nəticələr real vaxtda görünür.</p>
+        <p><strong>Necə işləyir?</strong> Siz atalar sözünü yazırsınız, axtar düyməsini sıxırsınız, 
+        sistem isə onu verilənlər bazasındakı düzgün variantlarla müqayisə edir və ən az fərqli olanı göstərir.</p>
+        <p><strong>İstifadəsi:</strong> Aşağıdakı xanaya atalar sözünü daxil edin və axtarışa başlayın.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -51,52 +51,50 @@ except Exception as e:
 
 # Axtarış bölməsi
 st.markdown("""
-    <h3 style="text-align: center; color: #2E7D32;">Atalar Sözünüzü Axtarın</h3>
+    <h3 style="text-align: center; color: #2E7D32; font-family: 'Arial', sans-serif; font-weight: bold; margin-bottom: 20px;">
+        Atalar Sözünüzü Axtarın
+    </h3>
     """, unsafe_allow_html=True)
 
-# Session state ilə real-time axtarış
-if 'user_input' not in st.session_state:
-    st.session_state.user_input = ""
-
-# Axtarış pəncərəsi
-st.text_input(
+# Axtarış pəncərəsi və düymə
+user_input = st.text_input(
     "",
     placeholder="Atalar sözünü bura yazın...",
     max_chars=100,
-    key="proverb_input",
-    value=st.session_state.user_input,
-    on_change=lambda: setattr(st.session_state, 'user_input', st.session_state.proverb_input)
+    key="proverb_input"
 )
 
-# Ən yaxın atalar sözünü tapmaq üçün funksiya
-def find_closest_proverb(user_input, df):
-    if not user_input or df.empty:
-        return None, None
-    closest_proverb = None
-    min_distance = float('inf')
+# Axtarış düyməsi
+if st.button("Axtar"):
+    # Ən yaxın atalar sözünü tapmaq üçün funksiya
+    def find_closest_proverb(user_input, df):
+        if not user_input or df.empty:
+            return None, None
+        closest_proverb = None
+        min_distance = float('inf')
 
-    for proverb in df['Atalar_sozlari']:
-        distance = Levenshtein.distance(user_input.lower(), proverb.lower())
-        if distance < min_distance:
-            min_distance = distance
-            closest_proverb = proverb
+        for proverb in df['Atalar_sozlari']:
+            distance = Levenshtein.distance(user_input.lower(), proverb.lower())
+            if distance < min_distance:
+                min_distance = distance
+                closest_proverb = proverb
 
-    return closest_proverb, min_distance
+        return closest_proverb, min_distance
 
-# Real-time nəticələri göstərmək
-if st.session_state.user_input and not df.empty:
-    closest_proverb, distance = find_closest_proverb(st.session_state.user_input, df)
-    
-    st.markdown("### Nəticə:")
-    if closest_proverb:
-        st.success(f"**Tapılan atalar sözü:** {closest_proverb}")
-        st.info(f"**Levenshtein məsafəsi:** {distance}")
-    else:
-        st.warning("Uyğun atalar sözü tapılmadı.")
-elif not st.session_state.user_input and not df.empty:
-    st.info("Atalar sözünü daxil edin.")
-elif df.empty:
-    st.warning("Verilənlər bazası yüklənməyib.")
+    # Nəticələri göstərmək
+    if user_input and not df.empty:
+        closest_proverb, distance = find_closest_proverb(user_input, df)
+        
+        st.markdown("### Nəticə:")
+        if closest_proverb:
+            st.success(f"**Tapılan atalar sözü:** {closest_proverb}")
+            st.info(f"**Levenshtein məsafəsi:** {distance}")
+        else:
+            st.warning("Uyğun atalar sözü tapılmadı.")
+    elif not user_input:
+        st.info("Atalar sözünü daxil edin.")
+    elif df.empty:
+        st.warning("Verilənlər bazası yüklənməyib.")
 
 # Əlaqə məlumatları
 st.markdown("""
@@ -109,6 +107,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Verilənlər bazasını endirmək üçün düymə
+st.markdown("---")  # Ayrıcı xətt
 response = requests.get(default_url)
 if response.status_code == 200:
     csv_data = BytesIO(response.content)

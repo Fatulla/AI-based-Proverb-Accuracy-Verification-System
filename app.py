@@ -36,9 +36,8 @@ with st.expander("Sistem Haqqında", expanded=False):
     <div style="color: #1E88E5; font-size: 16px;">
         <p>Bu sistem, daxil etdiyiniz atalar sözünü verilənlər bazası ilə müqayisə edərək 
         <strong>Levenshtein məsafəsi</strong> alqoritminə əsasən ən yaxın düzgün variantı tapır.</p>
-        <p><strong>Necə işləyir?</strong> Siz atalar sözünü yazırsınız, Enter düyməsini sıxırsınız, 
         sistem isə onu verilənlər bazasındakı düzgün variantlarla müqayisə edir və ən az fərqli olanı göstərir.</p>
-        <p><strong>İstifadəsi:</strong> Aşağıdakı xanaya atalar sözünü daxil edin və Enter basın.</p>
+        <p><strong>İstifadəsi:</strong> Aşağıdakı xanaya düzgün yazılışından əmin olmadığınız atalar sözünü daxil edin və Enter düyməsinə basın.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -48,13 +47,6 @@ try:
 except Exception as e:
     st.error(f"Verilənlər bazasını oxumaq mümkün olmadı: {e}")
     df = pd.DataFrame()
-
-# Axtarış bölməsi
-st.markdown("""
-    <h3 style="text-align: center; color: 4CAF50; font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; margin-bottom: 15px;">
-        Atalar Sözünüzü Axtarın
-    </h3>
-    """, unsafe_allow_html=True)
 
 # Axtarış pəncərəsi
 user_input = st.text_input(

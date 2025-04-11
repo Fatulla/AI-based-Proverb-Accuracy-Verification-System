@@ -51,7 +51,7 @@ except Exception as e:
 
 # Axtarış bölməsi
 st.markdown("""
-    <h3 style="text-align: center; color: #D32F2F; font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+    <h3 style="text-align: center; color: 4CAF50; font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; margin-bottom: 15px;">
         Atalar Sözünüzü Axtarın
     </h3>
     """, unsafe_allow_html=True)

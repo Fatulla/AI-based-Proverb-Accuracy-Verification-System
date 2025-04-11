@@ -36,7 +36,6 @@ with st.expander("Sistem Haqqında", expanded=False):
     <div style="color: #1E88E5; font-size: 16px;">
         <p>Bu sistem, daxil etdiyiniz atalar sözünü verilənlər bazası ilə müqayisə edərək 
         <strong>Levenshtein məsafəsi</strong> alqoritminə əsasən ən yaxın düzgün variantı tapır.</p>
-        sistem isə onu verilənlər bazasındakı düzgün variantlarla müqayisə edir və ən az fərqli olanı göstərir.</p>
         <p><strong>İstifadəsi:</strong> Aşağıdakı xanaya düzgün yazılışından əmin olmadığınız atalar sözünü daxil edin və Enter düyməsinə basın.</p>
     </div>
     """, unsafe_allow_html=True)

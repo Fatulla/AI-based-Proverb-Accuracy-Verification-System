@@ -36,9 +36,9 @@ with st.expander("Sistem Haqqında", expanded=False):
     <div style="color: #1E88E5; font-size: 16px;">
         <p>Bu sistem, daxil etdiyiniz atalar sözünü verilənlər bazası ilə müqayisə edərək 
         <strong>Levenshtein məsafəsi</strong> alqoritminə əsasən ən yaxın düzgün variantı tapır.</p>
-        <p><strong>Necə işləyir?</strong> Siz atalar sözünü yazırsınız, axtar düyməsini sıxırsınız, 
+        <p><strong>Necə işləyir?</strong> Siz atalar sözünü yazırsınız, Enter düyməsini sıxırsınız, 
         sistem isə onu verilənlər bazasındakı düzgün variantlarla müqayisə edir və ən az fərqli olanı göstərir.</p>
-        <p><strong>İstifadəsi:</strong> Aşağıdakı xanaya atalar sözünü daxil edin və axtarışa başlayın.</p>
+        <p><strong>İstifadəsi:</strong> Aşağıdakı xanaya atalar sözünü daxil edin və Enter basın.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -51,12 +51,12 @@ except Exception as e:
 
 # Axtarış bölməsi
 st.markdown("""
-    <h3 style="text-align: center; color: #2E7D32; font-family: 'Arial', sans-serif; font-weight: bold; margin-bottom: 20px;">
+    <h3 style="text-align: center; color: #D32F2F; font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; margin-bottom: 15px;">
         Atalar Sözünüzü Axtarın
     </h3>
     """, unsafe_allow_html=True)
 
-# Axtarış pəncərəsi və düymə
+# Axtarış pəncərəsi
 user_input = st.text_input(
     "",
     placeholder="Atalar sözünü bura yazın...",
@@ -64,37 +64,35 @@ user_input = st.text_input(
     key="proverb_input"
 )
 
-# Axtarış düyməsi
-if st.button("Axtar"):
-    # Ən yaxın atalar sözünü tapmaq üçün funksiya
-    def find_closest_proverb(user_input, df):
-        if not user_input or df.empty:
-            return None, None
-        closest_proverb = None
-        min_distance = float('inf')
+# Ən yaxın atalar sözünü tapmaq üçün funksiya
+def find_closest_proverb(user_input, df):
+    if not user_input or df.empty:
+        return None, None
+    closest_proverb = None
+    min_distance = float('inf')
 
-        for proverb in df['Atalar_sozlari']:
-            distance = Levenshtein.distance(user_input.lower(), proverb.lower())
-            if distance < min_distance:
-                min_distance = distance
-                closest_proverb = proverb
+    for proverb in df['Atalar_sozlari']:
+        distance = Levenshtein.distance(user_input.lower(), proverb.lower())
+        if distance < min_distance:
+            min_distance = distance
+            closest_proverb = proverb
 
-        return closest_proverb, min_distance
+    return closest_proverb, min_distance
 
-    # Nəticələri göstərmək
-    if user_input and not df.empty:
-        closest_proverb, distance = find_closest_proverb(user_input, df)
-        
-        st.markdown("### Nəticə:")
-        if closest_proverb:
-            st.success(f"**Tapılan atalar sözü:** {closest_proverb}")
-            st.info(f"**Levenshtein məsafəsi:** {distance}")
-        else:
-            st.warning("Uyğun atalar sözü tapılmadı.")
-    elif not user_input:
-        st.info("Atalar sözünü daxil edin.")
-    elif df.empty:
-        st.warning("Verilənlər bazası yüklənməyib.")
+# Nəticələri göstərmək (Enter ilə işləyir)
+if user_input and not df.empty:
+    closest_proverb, distance = find_closest_proverb(user_input, df)
+    
+    st.markdown("### Nəticə:")
+    if closest_proverb:
+        st.success(f"**Tapılan atalar sözü:** {closest_proverb}")
+        st.info(f"**Levenshtein məsafəsi:** {distance}")
+    else:
+        st.warning("Uyğun atalar sözü tapılmadı.")
+elif user_input == "" and not df.empty:
+    st.info("Atalar sözünü daxil edin.")
+elif df.empty:
+    st.warning("Verilənlər bazası yüklənməyib.")
 
 # Əlaqə məlumatları
 st.markdown("""

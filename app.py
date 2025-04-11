@@ -3,6 +3,7 @@ import pandas as pd
 import Levenshtein
 from streamlit_lottie import st_lottie
 import requests
+from io import BytesIO
 
 # Lottie animasiyasını yükləmək üçün funksiya
 def load_lottie_url(url: str):
@@ -37,51 +38,56 @@ with st.expander("Sistem Haqqında", expanded=False):
         <strong>Levenshtein məsafəsi</strong> alqoritminə əsasən ən yaxın düzgün variantı tapır.</p>
         <p><strong>Necə işləyir?</strong> Siz atalar sözünü yazırsınız, sistem isə onu 
         verilənlər bazasındakı düzgün variantlarla müqayisə edir və ən az fərqli olanı göstərir.</p>
-        <p><strong>İstifadəsi:</strong> Sadəcə aşağıdakı xanaya atalar sözünü daxil edin!</p>
+        <p - Siz atalar sözünü yazarkən sistem real vaxt rejimində nəticələri göstərir.</p>
     </div>
     """, unsafe_allow_html=True)
 
-# Verilənlər bazası seçimi
+# Verilənlər bazasını yükləmək
 st.markdown("""
-    <h3 style="text-align: center; color: #2E7D32;">Verilənlər Bazasını Seçin</h3>
+    <h3 style="text-align: center; color: #2E7D32;">Verilənlər Bazası</h3>
     """, unsafe_allow_html=True)
 
-data_source = st.radio(
-    "Verilənlər bazası mənbəyi:",
-    ("Varsayılan verilənlər bazası", "Öz CSV faylımı yüklə")
-)
-
-if data_source == "Varsayılan verilənlər bazası":
-    try:
-        df = pd.read_csv(default_url, sep='|', encoding='utf-8-sig')
-        st.success("Varsayılan verilənlər bazası uğurla yükləndi!")
-    except Exception as e:
-        st.error(f"Varsayılan verilənlər bazasını yükləmək mümkün olmadı: {e}")
-        df = pd.DataFrame()  # Boş DataFrame
-else:
-    uploaded_file = st.file_uploader("CSV faylını yükləyin (sütun adı: 'Atalar_sozlari' olmalıdır)", type=["csv"])
-    if uploaded_file:
-        try:
-            df = pd.read_csv(uploaded_file, sep='|', encoding='utf-8-sig')
-            if 'Atalar_sozlari' not in df.columns:
-                st.error("Faylda 'Atalar_sozlari' sütunu olmalıdır!")
-                df = pd.DataFrame()
-            else:
-                st.success("Fayl uğurla yükləndi!")
-        except Exception as e:
-            st.error(f"Faylı yükləmək mümkün olmadı: {e}")
-            df = pd.DataFrame()
+# Verilənlər bazasını yükləmək üçün düymə
+try:
+    response = requests.get(default_url)
+    if response.status_code == 200:
+        csv_data = BytesIO(response.content)
+        st.download_button(
+            label="Verilənlər bazasını yüklə",
+            data=csv_data,
+            file_name="atalar_sozleri_corrected.csv",
+            mime="text/csv"
+        )
     else:
-        st.info("Zəhmət olmasa, CSV faylı yükləyin.")
-        df = pd.DataFrame()
+        st.error("Verilənlər bazasını yükləmək mümkün olmadı.")
+except Exception as e:
+    st.error(f"Xəta: {e}")
+
+# Verilənlər bazasını oxumaq
+try:
+    df = pd.read_csv(default_url, sep='|', encoding='utf-8-sig')
+except Exception as e:
+    st.error(f"Verilənlər bazasını oxumaq mümkün olmadı: {e}")
+    df = pd.DataFrame()
 
 # Axtarış bölməsi
 st.markdown("""
     <h3 style="text-align: center; color: #2E7D32;">Atalar Sözünüzü Axtarın</h3>
     """, unsafe_allow_html=True)
 
-# Axtarış pəncərəsi (real-time)
-user_input = st.text_input("", placeholder="Atalar sözünü bura yazın...", max_chars=100, key="proverb_input")
+# Session state ilə real-time axtarış
+if 'user_input' not in st.session_state:
+    st.session_state.user_input = ""
+
+# Axtarış pəncərəsi
+user_input = st.text_input(
+    "",
+    placeholder="Atalar sözünü bura yazın...",
+    max_chars=100,
+    key="proverb_input",
+    value=st.session_state.user_input,
+    on_change=lambda: setattr(st.session_state, 'user_input', st.session_state.proverb_input)
+)
 
 # Ən yaxın atalar sözünü tapmaq üçün funksiya
 def find_closest_proverb(user_input, df):
@@ -99,8 +105,8 @@ def find_closest_proverb(user_input, df):
     return closest_proverb, min_distance
 
 # Real-time nəticələri göstərmək
-if user_input and not df.empty:
-    closest_proverb, distance = find_closest_proverb(user_input, df)
+if st.session_state.user_input and not df.empty:
+    closest_proverb, distance = find_closest_proverb(st.session_state.user_input, df)
     
     st.markdown("### Nəticə:")
     if closest_proverb:
@@ -108,10 +114,10 @@ if user_input and not df.empty:
         st.info(f"**Levenshtein məsafəsi:** {distance}")
     else:
         st.warning("Uyğun atalar sözü tapılmadı.")
-elif not user_input and not df.empty:
+elif not st.session_state.user_input and not df.empty:
     st.info("Atalar sözünü daxil edin.")
 elif df.empty:
-    st.warning("Verilənlər bazası yüklənməyib. Zəhmət olmasa, faylı yükləyin və ya varsayılan bazanı seçin.")
+    st.warning("Verilənlər bazası yüklənməyib.")
 
 # Əlaqə məlumatları
 st.markdown("""
